@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOLD Fitness - Lokesh H</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; line-height: 1.6; color: #333; overflow-x: hidden; }
+        
+        /* Hero Slider */
+        .hero { 
+            height: 100vh; 
+            min-height: 100vh; 
+            position: relative; 
+            overflow: hidden; 
+            width: 100vw;
+        }
+        .slider-container { 
+            position: relative; 
+            height: 100%; 
+            width: 100%; 
+        }
+        .slides { position: relative; height: 100%; width: 100%; }
+        .slide { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            background-size: cover !important; 
+            background-position: center !important;
+            opacity: 0; transition: opacity 0.8s ease-in-out;
+            display: flex; align-items: center; justify-content: center; text-align: center;
+        }
+        .slide.active { opacity: 1; z-index: 2; }
+        
+        /* First slide - NO card, just text overlay */
+        .slide-content {
+            padding: 0;
+            text-align: center;
+            max-width: 90%;
+        }
+        .slide-content h1 { 
+            font-size: clamp(2.2rem, 6vw, 4rem); 
+            margin-bottom: 1rem; 
+            color: white; 
+            text-shadow: 0 3px 15px rgba(0,0,0,0.8); 
+            font-weight: 700;
+        }
+        .slide-content p { 
+            font-size: clamp(1.1rem, 4vw, 1.4rem); 
+            margin-bottom: 2rem; 
+            color: rgba(255,255,255,0.95); 
+            text-shadow: 0 2px 10px rgba(0,0,0,0.7);
+            line-height: 1.4;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* 7 Gym Photos */
+        .slide:nth-child(1) { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('prof.jpeg'); }
+        .slide:nth-child(2) { background-image: linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.25)), url('prof2.jpeg'); }
+        .slide:nth-child(3) { background-image: linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.25)), url('prof3.jpeg'); }
+        .slide:nth-child(4) { background-image: linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.25)), url('prof4.jpeg'); }
+        .slide:nth-child(5) { background-image: linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.25)), url('https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'); }
+        .slide:nth-child(6) { background-image: linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.25)), url('https://images.unsplash.com/photo-1558618047-3c8c76ba6dd9?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'); }
+        .slide:nth-child(7) { background-image: linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.25)), url('https://images.unsplash.com/photo-1518895499952-b45122d7b9f7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'); }
+        
+        .btn { 
+            background: rgba(255,107,53,0.95); 
+            color: white; 
+            padding: clamp(14px, 4vw, 18px) clamp(30px, 8vw, 40px); 
+            text-decoration: none; 
+            border-radius: 50px; 
+            font-weight: 600; 
+            font-size: clamp(16px, 4vw, 18px);
+            transition: all 0.3s; 
+            display: inline-block; 
+            border: 2px solid rgba(255,255,255,0.5);
+            box-shadow: 0 5px 20px rgba(255,107,53,0.4);
+        }
+        .btn:hover { 
+            transform: scale(1.05) translateY(-2px); 
+            background: #ff6b35; 
+            border-color: rgba(255,255,255,0.8);
+            box-shadow: 0 8px 25px rgba(255,107,53,0.6);
+        }
+        
+        /* TRANSPARENT Arrows */
+        .prev, .next {
+            position: absolute; 
+            top: 50%; 
+            transform: translateY(-50%); 
+            width: clamp(30px, 8vw, 40px); 
+            height: clamp(30px, 8vw, 40px);
+            background: rgba(255,255,255,0.15) !important; 
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: rgba(255,255,255,0.95) !important; 
+            border-radius: 50%; 
+            font-size: clamp(20px, 6vw, 26px);
+            cursor: pointer; 
+            transition: all 0.3s; 
+            z-index: 10; 
+            text-align: center; 
+            line-height: 1;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+        .prev { left: clamp(15px, 4vw, 25px); }
+        .next { right: clamp(15px, 4vw, 25px); }
+        .prev:hover, .next:hover { 
+            background: rgba(255,107,53,0.9) !important;
+            border-color: rgba(255,255,255,0.6);
+            transform: translateY(-50%) scale(1.15); 
+            color: white !important;
+        }
+        
+        /* Rest of styles */
+        section { padding: clamp(40px, 10vw, 80px) 5%; }
+        h2 { text-align: center; font-size: clamp(1.8rem, 5vw, 2.5rem); margin-bottom: 2rem; color: #ff6b35; }
+        .about { background: #f8f9fa; }
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(clamp(250px, 45vw, 300px), 1fr)); 
+            gap: clamp(1.5rem, 5vw, 2rem); 
+        }
+        .card { 
+            background: white; 
+            padding: clamp(1.5rem, 5vw, 2rem); 
+            border-radius: 10px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+            text-align: center; 
+            transition: transform 0.3s; 
+        }
+        .card:hover { transform: translateY(-10px); }
+        .classes .grid { grid-template-columns: repeat(auto-fit, minmax(clamp(200px, 40vw, 250px), 1fr)); }
+        .trainer { text-align: center; }
+        .trainer img { 
+            width: clamp(120px, 30vw, 200px); 
+            height: clamp(120px, 30vw, 200px); 
+            border-radius: 50%; 
+            margin-bottom: 1rem; 
+            object-fit: cover; 
+        }
+        .contact { background: #333; color: white; text-align: center; }
+        .contact-info { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 2rem; 
+            margin-bottom: 3rem; 
+        }
+        .info-item i { font-size: clamp(1.8rem, 6vw, 2rem); color: #ff6b35; margin-bottom: 1rem; }
+        .bmi-calc { 
+            background: white; 
+            padding: clamp(1.5rem, 6vw, 2rem); 
+            border-radius: 10px; 
+            max-width: 400px; 
+            margin: 2rem auto; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+        }
+        #bmi-result { font-size: clamp(1.2rem, 4vw, 1.5rem); font-weight: bold; margin-top: 1rem; }
+        input, textarea { 
+            padding: clamp(10px, 3vw, 12px); 
+            border: 1px solid #ddd; 
+            border-radius: 5px; 
+            width: 100%; 
+            font-size: 16px; 
+        }
+        button { 
+            background: #ff6b35; 
+            color: white; 
+            padding: clamp(10px, 3vw, 12px); 
+            border: none; 
+            border-radius: 5px; 
+            font-size: clamp(1rem, 3vw, 1.1rem); 
+            cursor: pointer; 
+            width: 100%; 
+        }
+        
+        @media (max-width: 480px) { 
+            .contact-info { grid-template-columns: 1fr; gap: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="hero">
+        <div class="slider-container">
+            <div class="slides">
+                <!-- First slide: Just icon + text + button -->
+                <div class="slide active">
+                    <div class="slide-content">
+                        <h1><i class="fas fa-dumbbell"></i> BOLD Fitness</h1>
+                        <p>Transform your body with Lokesh H's expert training</p>
+                        <a href="#contact" class="btn">Join Now</a>
+                    </div>
+                </div>
+                <!-- Empty photo slides -->
+                <div class="slide"></div>
+                <div class="slide"></div>
+                <div class="slide"></div>
+                <div class="slide"></div>
+                <div class="slide"></div>
+                <div class="slide"></div>
+            </div>
+            
+            <!-- Transparent glass arrows -->
+            <a class="prev" onclick="changeSlide(-1)">❮</a>
+            <a class="next" onclick="changeSlide(1)">❯</a>
+        </div>
+    </header>
+
+    <section id="about" class="about">
+        <h2>About BOLD Fitness</h2>
+        <div class="grid">
+            <div class="card">
+                <i class="fas fa-users fa-3x" style="color: #ff6b35;"></i>
+                <h3>Expert Trainers</h3>
+                <p>Led by Lokesh H, our certified trainers provide personalized workouts for all levels.</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-clock fa-3x" style="color: #ff6b35;"></i>
+                <h3>5-10AM & 5-10PM Access</h3>
+                <p>Open round the clock so you can train whenever it suits your schedule.</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-award fa-3x" style="color: #ff6b35;"></i>
+                <h3>Proven Results</h3>
+                <p>Join hundreds who have achieved their fitness goals with us.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="classes">
+        <h2>Our Classes</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>Weight Training</h3>
+                <p>Build strength and muscle with free weights and machines.</p>
+            </div>
+            <div class="card">
+                <h3>Cardio Blast</h3>
+                <p>High-intensity sessions to burn fat fast.</p>
+            </div>
+            <!-- <div class="card">
+                <h3>Yoga & Flexibility</h3>
+                <p>Improve mobility and reduce stress.</p>
+            </div> -->
+        </div>
+    </section>
+
+    <section id="trainers">
+        <h2>Meet the Owner</h2>
+        <div class="trainer">
+            <img src="prof2.jpeg" alt="Lokesh H">
+            <h3>Lokesh H</h3>
+            <p>Manager & Head Trainer with years of experience in fitness transformation.</p>
+        </div>
+    </section>
+
+    <section id="bmi">
+        <h2>Calculate Your BMI</h2>
+        <div class="bmi-calc">
+            <input type="number" id="weight" placeholder="Weight (kg)" step="0.1">
+            <input type="number" id="height" placeholder="Height (m, e.g., 1.75)" step="0.01">
+            <button onclick="calculateBMI()">Calculate BMI</button>
+            <div id="bmi-result"></div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <h2>Contact Us</h2>
+        <div class="contact-info">
+            <div class="info-item">
+                <i class="fas fa-phone"></i>
+                <h3>Phone</h3>
+                <p><a href="tel:8123722282" style="color: #ff6b35;">8123722282</a></p>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <h3>Location</h3>
+                <p>pepsi gate, 56, Hosapalya Rd, Kumbalgodu, Bengaluru, Karnataka 560074</p>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-envelope"></i>
+                <h3>Email</h3>
+                <p>Loky1728@gmail.com</p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // 5-second auto timer
+        let slideIndex = 1;
+        let autoSlideInterval;
+        
+        showSlides(slideIndex);
+        startAutoSlide();
+
+        function changeSlide(n) {
+            showSlides(slideIndex += n);
+        }
+
+        function showSlides(n) {
+            let slides = document.querySelectorAll('.slide');
+            if (n > slides.length) slideIndex = 1;
+            if (n < 1) slideIndex = slides.length;
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[slideIndex-1].classList.add('active');
+        }
+
+        function startAutoSlide() {
+            autoSlideInterval = setInterval(() => {
+                changeSlide(1);
+            }, 5000);
+        }
+
+        // Pause on arrow hover
+        document.querySelector('.prev').addEventListener('mouseenter', () => clearInterval(autoSlideInterval));
+        document.querySelector('.next').addEventListener('mouseenter', () => clearInterval(autoSlideInterval));
+        document.querySelector('.prev').addEventListener('mouseleave', startAutoSlide);
+        document.querySelector('.next').addEventListener('mouseleave', startAutoSlide);
+
+        // BMI Calculator
+        function calculateBMI() {
+            const weight = parseFloat(document.getElementById('weight').value);
+            const height = parseFloat(document.getElementById('height').value);
+            if (isNaN(weight) || isNaN(height) || height <= 0) {
+                document.getElementById('bmi-result').innerHTML = 'Enter valid weight (kg) and height (m, e.g., 1.75)';
+                return;
+            }
+            const bmi = weight / (height * height);
+            const result = document.getElementById('bmi-result');
+            result.innerHTML = `Your BMI: ${bmi.toFixed(1)}`;
+            if (bmi < 18.5) {
+                result.innerHTML += ' (Underweight)';
+                result.style.color = '#f39c12';
+            } else if (bmi < 25) {
+                result.innerHTML += ' (Normal)';
+                result.style.color = '#27ae60';
+            } else if (bmi < 30) {
+                result.innerHTML += ' (Overweight)';
+                result.style.color = '#e67e22';
+            } else {
+                result.innerHTML += ' (Obese)';
+                result.style.color = '#e74c3c';
+            }
+        }
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
